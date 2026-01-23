@@ -1,0 +1,35 @@
+# --- OS/editor ---
+.DS_Store
+*.swp
+.vscode/
+.idea/
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+
+# --- C/C++ ---
+cpp/build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.o
+*.a
+*.so
+*.out
+
+# --- Logs / audio dumps ---
+logs/
+recordings/
+*.wav
+
+# --- Secrets ---
+.env
+

@@ -1,7 +1,11 @@
 import whisper
 import time
+from wake_word import *
+import sounddevice as sd
+from stt_cpu import *
 
 wake_word=wake_word()
+stt_model = STT_CPU()
 
 # --- initialization ---
 #load whisper model
@@ -20,13 +24,7 @@ while True:
         # --- Whisper STT ---
         #activate whisper to listen for speech
         #run locally on cpu right now
-        start_time = time.time()
-        result = model.transcribe("../media/You Shall Not Pass!.mp3")
-        result_time = time.time()
-
-        print(result["text"])
-        print(f'Time to run model: %d s', (result_time - model_time))
-
+	stt_model.listen_to_stream()
         # --- LLM ---
 
 

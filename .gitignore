@@ -16,6 +16,9 @@ build/
 
 # --- media ---
 media/picovoice_key.txt
+media/elevenLabs_key.txt
+media/openAI_key.txt
+media/gemini_api_key.txt
 
 # --- C/C++ ---
 cpp/build/

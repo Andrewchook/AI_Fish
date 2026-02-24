@@ -5,8 +5,8 @@ import struct
 class wake_word: 
     def __init__(self):
         API_KEY = load_api_key()
-        print("API key loaded successfully")
-        print(API_KEY)
+        #print("API key loaded successfully")
+        #print(API_KEY)
         self.porcupine = pvporcupine.create(
             access_key=API_KEY,
             keyword_paths=['/home/fish/CPE542/AI_Fish/media/Hey-fish_en_raspberry-pi_v4_0_0.ppn']

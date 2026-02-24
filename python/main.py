@@ -53,9 +53,17 @@ while True:
         # --- Whisper STT ---
         #activate whisper to listen for speech
         #run locally on cpu right now
+<<<<<<< HEAD
         print("Listening for speech.")
         result = stt_model.listen_to_stream(model)
         print(result["text"])
+=======
+        audio = stt_model.record_audio(DURATION_SEC)
+        audio_16k = stt_model.to_16k(audio)
+        stt_model.write_wav_16k(WAV_PATH, audio_16k)
+        #stt_model.listen_to_stream()
+        # --- LLM ---
+>>>>>>> refs/remotes/origin/main
 
         # --- LLM ---
         response = client.models.generate_content(

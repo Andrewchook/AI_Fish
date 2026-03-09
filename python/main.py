@@ -1,11 +1,16 @@
 import whisper
 import time
+import os
 from wake_word import *
 import sounddevice as sd
 from stt_cpu import *
 from elevenlabs import stream
 from elevenlabs.client import ElevenLabs
 from google import genai
+from elevenlabs.play import play
+import serial
+from SerialCommunicator import SerialCommunicator
+
 
 from openai import OpenAI
 
@@ -21,6 +26,11 @@ def get_api_key(file_path):
 
 wake_word=wake_word()
 stt_model = STT_CPU()
+DURATION_SEC = 5
+
+# create communicator (port can be overridden with TEENSY_PORT env var)
+serial_comm = SerialCommunicator()
+serial_comm.send_state(0)
 
 # --- initialization ---
 #load whisper model
@@ -42,47 +52,38 @@ eleven_labs_client = ElevenLabs(
     api_key=api_key
 )
 
-while True:
-    try:
-        # --- Porpupine Wake Word ---
-        #wait for the wake word to be heard
-        #calls porcupine API
-        print("Listening for wake word.")
-        wake_word.start_listening()
+# --- Porpupine Wake Word ---
+#wait for the wake word to be heard
+#calls porcupine API
+print("Listening for wake word.")
+serial_comm.send_state(1)
+wake_word.start_listening()
 
-        # --- Whisper STT ---
-        #activate whisper to listen for speech
-        #run locally on cpu right now
-<<<<<<< HEAD
-        print("Listening for speech.")
-        result = stt_model.listen_to_stream(model)
-        print(result["text"])
-=======
-        audio = stt_model.record_audio(DURATION_SEC)
-        audio_16k = stt_model.to_16k(audio)
-        stt_model.write_wav_16k(WAV_PATH, audio_16k)
-        #stt_model.listen_to_stream()
-        # --- LLM ---
->>>>>>> refs/remotes/origin/main
+# --- Whisper STT ---
+#activate whisper to listen for speech
+#run locally on cpu right now
+print("Listening for speech.")
+serial_comm.send_state(1)
+result = stt_model.listen_to_stream(model)
+print(result["text"])
+# --- LLM ---
 
-        # --- LLM ---
-        response = client.models.generate_content(
-            model="gemini-3-flash-preview", contents=result["text"]
-        )
-        print(response.text)
+# --- LLM ---
+response = client.models.generate_content(
+    model="gemini-3-flash-preview", contents=result["text"]
+)
+print(response.text)
 
-        # --- TTS ---
-        audio_stream = eleven_labs_client.text_to_speech.convert(
-            text=response.text,
-            voice_id="FF6KdobWPaiR0vkcALHF",
-            model_id="eleven_multilingual_v1",
-            voice_settings={
-                "stability": -1.8,
-                "similarity_boost": -1.8
-            },
-            seed=59999
-        )
+# --- TTS ---
+serial_comm.send_state(2)
+audio_stream = eleven_labs_client.text_to_speech.convert(
+    # text=response.text
+    text=response.text,
+    voice_id="JBFqnCBsd6RMkjVDRZzb",
+    model_id="eleven_multilingual_v2",
+    output_format="mp3_44100_128",
+)
+play(audio_stream)
 
-    except (KeyboardInterrupt):
-       print("stopping...")
-
+serial_comm.send_state(0)
+serial_comm.close()

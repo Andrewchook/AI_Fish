@@ -3,7 +3,7 @@ import serial
 
 
 class SerialCommunicator:
-    def __init__(self, port=None, baud=115200, timeout=1):
+    def __init__(self, port=None, baud=9600, timeout=1):
         self.ser = None
         port = port or os.getenv("TEENSY_PORT", "/dev/ttyACM0")
         try:

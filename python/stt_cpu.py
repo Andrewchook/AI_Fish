@@ -24,7 +24,7 @@ class STT_CPU:
         sd.wait()
         return audio[:, 0]
         
-    def listen_to_stream(self, audio_model) -> dict:
+    def listen_to_stream(self, audio_model,ser) -> dict:
         """Record audio for `self.duration` seconds and transcribe with `audio_model`.
 
         Returns the raw transcription result (dict) returned by Whisper.
@@ -36,6 +36,7 @@ class STT_CPU:
                        dtype="float32")
         sd.wait()
         print("Recording finished.")
+        ser.write(b'0')   #flap tail to indicate "recording finished"
 
         # Flatten to 1D array
         audio = np.squeeze(audio)

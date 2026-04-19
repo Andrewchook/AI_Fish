@@ -9,8 +9,8 @@ from elevenlabs.client import ElevenLabs
 from google import genai
 from elevenlabs.play import play
 import serial
-from SerialCommunicator import SerialCommunicator
 from google.genai import types
+
 #from openai import OpenAI
 
 
@@ -23,7 +23,7 @@ def get_api_key(file_path):
     except FileNotFoundError: 
         print(f"Error: the file {file_path}  was not found")
 
-wake_word=wake_word()
+#wake_word=wake_word()
 stt_model = STT_CPU()
 DURATION_SEC = 5
 
@@ -52,14 +52,15 @@ eleven_labs_client = ElevenLabs(
 #calls porcupine API
 print("Listening for wake word.")
 ser.write(b'1')   #flap tail to indicate "listening for wake word"
-wake_word.start_listening()
+#wake_word.start_listening()
+start_wake_listener()
 
 # --- Whisper STT ---
 #activate whisper to listen for speech
 #run locally on cpu right now
 print("Listening for speech.")
 ser.write(b'2')   #lift head to indicate "listening"
-result = stt_model.listen_to_stream(model,ser)
+result = stt_model.listen_to_stream(model,ser,5)
 print(result["text"])
 
 # --- LLM ---
@@ -70,7 +71,7 @@ response = client.models.generate_content(
     config=types.GenerateContentConfig(
         system_instruction=
         """
-        You are a witty fish on the wall. 
+        You are a witty and helpful fish on the wall. 
         Make really smart remarks.
         Keep responses to roughly 20 words.
         Keep the grammar simple.

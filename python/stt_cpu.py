@@ -24,13 +24,12 @@ class STT_CPU:
         sd.wait()
         return audio[:, 0]
         
-    def listen_to_stream(self, audio_model,ser) -> dict:
+    def listen_to_stream(self, audio_model,ser,dur) -> dict:
         """Record audio for `self.duration` seconds and transcribe with `audio_model`.
 
         Returns the raw transcription result (dict) returned by Whisper.
         """
-        print("Listening...")
-        audio = sd.rec(int(self.duration * self.sample_rate),
+        audio = sd.rec(int(dur * self.sample_rate),
                        samplerate=self.sample_rate,
                        channels=1,
                        dtype="float32")
